@@ -1,354 +1,57 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="id">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width,initial-scale=1">
-  <meta name="theme-color" content="#f4f5f3">
-  <title>Baim Tools</title>
-
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Bypass SFL</title>
   <style>
-    * {
-      box-sizing: border-box;
-    }
-
-    body {
-      margin: 0;
-      min-height: 100vh;
-      background: #f4f5f3;
-      color: #171917;
-      font-family: Inter, system-ui, -apple-system, BlinkMacSystemFont,
-        "Segoe UI", sans-serif;
-    }
-
-    .page {
-      width: min(720px, calc(100% - 32px));
-      margin: auto;
-      padding: 70px 0;
-    }
-
-    .brand {
-      display: flex;
-      align-items: center;
-      gap: 10px;
-      margin-bottom: 38px;
-    }
-
-    .logo {
-      width: 34px;
-      height: 34px;
-      border-radius: 9px;
-      background: #197342;
-      color: #fff;
-      display: grid;
-      place-items: center;
-      font-weight: 800;
-    }
-
-    .brand-name {
-      font-weight: 700;
-      font-size: 15px;
-    }
-
-    h1 {
-      margin: 0;
-      font-size: clamp(34px, 7vw, 48px);
-      line-height: 1;
-      letter-spacing: -.045em;
-    }
-
-    .desc {
-      margin: 15px 0 30px;
-      max-width: 560px;
-      color: #717570;
-      line-height: 1.65;
-    }
-
-    .box {
-      background: #fff;
-      border: 1px solid #dedfdb;
-      border-radius: 14px;
-      padding: 8px;
-    }
-
-    form {
-      display: flex;
-      gap: 8px;
-    }
-
-    input {
-      flex: 1;
-      min-width: 0;
-      height: 52px;
-      border: 0;
-      outline: 0;
-      background: transparent;
-      padding: 0 14px;
-      font-size: 15px;
-      color: #171917;
-    }
-
-    button {
-      height: 52px;
-      border: 0;
-      border-radius: 9px;
-      padding: 0 22px;
-      background: #197342;
-      color: #fff;
-      font-weight: 700;
-      cursor: pointer;
-    }
-
-    button:hover {
-      background: #125a32;
-    }
-
-    button:disabled {
-      opacity: .55;
-      cursor: wait;
-    }
-
-    #result {
-      display: none;
-      margin-top: 18px;
-      background: #fff;
-      border: 1px solid #dedfdb;
-      border-radius: 13px;
-      overflow: hidden;
-    }
-
-    #result.show {
-      display: block;
-    }
-
-    .result-header {
-      padding: 14px 16px;
-      border-bottom: 1px solid #e5e5e2;
-      display: flex;
-      justify-content: space-between;
-    }
-
-    .result-title {
-      font-size: 13px;
-      font-weight: 700;
-    }
-
-    .state {
-      font-size: 12px;
-      color: #197342;
-    }
-
-    .result-body {
-      padding: 17px 16px;
-    }
-
-    #destination {
-      overflow-wrap: anywhere;
-      color: #145b33;
-      font-size: 14px;
-      line-height: 1.6;
-      text-decoration: none;
-    }
-
-    #destination:hover {
-      text-decoration: underline;
-    }
-
-    .error {
-      color: #b42318 !important;
-    }
-
-    .meta {
-      margin-top: 12px;
-      display: flex;
-      gap: 18px;
-      color: #777a76;
-      font-size: 12px;
-    }
-
-    footer {
-      margin-top: 25px;
-      color: #858883;
-      font-size: 12px;
-    }
-
-    @media (max-width: 560px) {
-      .page {
-        padding-top: 42px;
-      }
-
-      form {
-        flex-direction: column;
-      }
-
-      button {
-        width: 100%;
-      }
-    }
+    body { font-family: Arial, sans-serif; max-width: 700px; margin: 2rem auto; padding: 0 1rem; }
+    input, button { padding: 0.5rem; font-size: 1rem; }
+    input { width: 70%; }
+    button { width: 25%; background: #0070f3; color: white; border: none; border-radius: 4px; cursor: pointer; }
+    button:hover { background: #0051a2; }
+    pre { background: #f4f4f4; padding: 1rem; border-radius: 4px; overflow-x: auto; white-space: pre-wrap; }
+    .loading { opacity: 0.6; pointer-events: none; }
   </style>
 </head>
-
 <body>
+  <h1>🔗 Bypass SFL / Khaddavi</h1>
+  <div>
+    <input type="text" id="urlInput" placeholder="Masukkan URL SFL (contoh: https://sfl.gl/...) " value="https://sfl.gl/dyktx" />
+    <button id="bypassBtn">Bypass!</button>
+  </div>
+  <div id="result">
+    <p>Hasil akan muncul di sini...</p>
+  </div>
 
-  <main class="page">
+  <script>
+    const urlInput = document.getElementById('urlInput');
+    const bypassBtn = document.getElementById('bypassBtn');
+    const resultDiv = document.getElementById('result');
 
-    <div class="brand">
-      <div class="logo">B</div>
-      <div class="brand-name">Baim Tools</div>
-    </div>
+    bypassBtn.addEventListener('click', async () => {
+      const url = urlInput.value.trim();
+      if (!url) return alert('Masukkan URL dulu!');
 
-    <h1>URL Resolver</h1>
+      bypassBtn.classList.add('loading');
+      bypassBtn.textContent = '⏳ Memproses...';
+      resultDiv.innerHTML = '<p>⏳ Menunggu response dari server...</p>';
 
-    <p class="desc">
-      Masukkan URL untuk diproses oleh resolver backend.
-    </p>
-
-    <section class="box">
-      <form id="form">
-
-        <input
-          id="url"
-          type="url"
-          placeholder="https://example.com/..."
-          autocomplete="off"
-          spellcheck="false"
-          required
-        >
-
-        <button id="button" type="submit">
-          Resolve
-        </button>
-
-      </form>
-    </section>
-
-    <section id="result">
-
-      <div class="result-header">
-        <span class="result-title">Result</span>
-        <span id="state" class="state">Ready</span>
-      </div>
-
-      <div class="result-body">
-
-        <a
-          id="destination"
-          target="_blank"
-          rel="noopener noreferrer"
-        ></a>
-
-        <div id="meta" class="meta"></div>
-
-      </div>
-
-    </section>
-
-    <footer>
-      Baim Tools · URL Resolver
-    </footer>
-
-  </main>
-
-<script>
-const form = document.getElementById("form");
-const input = document.getElementById("url");
-const button = document.getElementById("button");
-
-const result = document.getElementById("result");
-const state = document.getElementById("state");
-const destination = document.getElementById("destination");
-const meta = document.getElementById("meta");
-
-form.addEventListener("submit", async (e) => {
-  e.preventDefault();
-
-  const url = input.value.trim();
-
-  if (!isValidUrl(url)) {
-    showError("URL tidak valid.");
-    return;
-  }
-
-  button.disabled = true;
-  button.textContent = "Processing...";
-
-  result.classList.add("show");
-  state.textContent = "Processing";
-  state.className = "state";
-
-  destination.textContent = "Memproses...";
-  destination.removeAttribute("href");
-  destination.className = "";
-  meta.innerHTML = "";
-
-  const started = performance.now();
-
-  try {
-    const response = await fetch(
-      "/api/resolve?url=" + encodeURIComponent(url)
-    );
-
-    const data = await response.json();
-
-    if (!response.ok || data.status !== "success") {
-      throw new Error(
-        data.message || "Gagal memproses URL."
-      );
-    }
-
-    destination.href = data.destination;
-    destination.textContent = data.destination;
-
-    state.textContent = "Success";
-
-    const elapsed =
-      data.elapsed_ms ||
-      Math.round(performance.now() - started);
-
-    meta.innerHTML = `
-      <span>Author: ${escapeHtml(data.author || "Baim")}</span>
-      <span>Time: ${(elapsed / 1000).toFixed(2)}s</span>
-    `;
-
-  } catch (err) {
-    showError(err.message);
-  }
-
-  button.disabled = false;
-  button.textContent = "Resolve";
-});
-
-function showError(message) {
-  result.classList.add("show");
-
-  state.textContent = "Error";
-  state.className = "state error";
-
-  destination.removeAttribute("href");
-  destination.textContent = message;
-  destination.className = "error";
-
-  meta.innerHTML = "";
-}
-
-function isValidUrl(value) {
-  try {
-    const u = new URL(value);
-    return u.protocol === "http:" ||
-           u.protocol === "https:";
-  } catch {
-    return false;
-  }
-}
-
-function escapeHtml(value) {
-  return String(value)
-    .replaceAll("&", "&amp;")
-    .replaceAll("<", "&lt;")
-    .replaceAll(">", "&gt;")
-    .replaceAll('"', "&quot;")
-    .replaceAll("'", "&#039;");
-}
-</script>
-
+      try {
+        const res = await fetch('/api/bypass', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ url })
+        });
+        const data = await res.json();
+        resultDiv.innerHTML = `<pre>${JSON.stringify(data, null, 2)}</pre>`;
+      } catch (err) {
+        resultDiv.innerHTML = `<p style="color:red;">❌ Error: ${err.message}</p>`;
+      } finally {
+        bypassBtn.classList.remove('loading');
+        bypassBtn.textContent = 'Bypass!';
+      }
+    });
+  </script>
 </body>
 </html>
