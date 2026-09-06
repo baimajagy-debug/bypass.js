@@ -77,7 +77,7 @@ async function bypass(url = 'https://sfl.gl/u0i6x') {
     const elapsed = Date.now() - start;
     return {
       status: 'success',
-      author: 'warungerik',
+      author: 'Baim',
       input_url: url,
       alias,
       destination,
@@ -88,7 +88,7 @@ async function bypass(url = 'https://sfl.gl/u0i6x') {
     const elapsed = Date.now() - start;
     return {
       status: 'error',
-      author: 'warungerik',
+      author: 'Baim',
       input_url: url,
       message: err.message,
       duration: `${(elapsed / 1000).toFixed(2)}s`,
